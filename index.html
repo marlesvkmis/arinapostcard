@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>С Новым 2027 годом! Год Огненной Козы</title>
+<style>
+  :root{
+    --red:#ff4d3a;
+    --orange:#ff8c1a;
+    --gold:#ffd166;
+    --dark:#1a0b2e;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    font-family:'Segoe UI',Verdana,Arial,sans-serif;
+    color:#fff;
+    overflow-x:hidden;
+    background:
+      radial-gradient(1000px 500px at 50% -10%, #45125c, transparent 70%),
+      linear-gradient(180deg,#14081f 0%, #33103f 45%, #7a1230 100%);
+  }
+  /* ---------- СНЕГ ---------- */
+  canvas#snow{position:fixed;inset:0;pointer-events:none;z-index:6}
+  /* ---------- ЗВЁЗДЫ ---------- */
+  .star{position:fixed;border-radius:50%;background:#fff;opacity:.7;animation:twinkle 3s infinite ease-in-out;z-index:1}
+  @keyframes twinkle{0%,100%{opacity:.15;transform:scale(.7)}50%{opacity:.9;transform:scale(1.2)}}
+  /* ---------- ЭКРАНЫ ---------- */
+  .screen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;position:relative;z-index:10}
+  .hidden{display:none!important}
+  .card{
+    background:rgba(20,8,35,.55);
+    border:1px solid rgba(255,209,102,.35);
+    border-radius:24px;
+    padding:36px 28px;
+    max-width:560px;
+    width:100%;
+    text-align:center;
+    backdrop-filter:blur(6px);
+    box-shadow:0 0 60px rgba(255,77,58,.25), inset 0 0 40px rgba(255,209,102,.06);
+    animation:cardIn .8s ease both;
+  }
+  @keyframes cardIn{from{opacity:0;transform:translateY(30px) scale(.95)}to{opacity:1;transform:none}}
+  /* ---------- ГИРЛЯНДА ---------- */
+  .garland{display:flex;justify-content:center;gap:14px;margin-bottom:18px}
+  .bulb{width:14px;height:14px;border-radius:50%;animation:flicker 1.6s infinite}
+  .bulb:nth-child(1){background:#ff4d3a;animation-delay:0s}
+  .bulb:nth-child(2){background:#ffd166;animation-delay:.25s}
+  .bulb:nth-child(3){background:#7af58c;animation-delay:.5s}
+  .bulb:nth-child(4){background:#5ad1ff;animation-delay:.75s}
+  .bulb:nth-child(5){background:#ff8c1a;animation-delay:1s}
+  .bulb:nth-child(6){background:#ff4d9d;animation-delay:1.25s}
+  .bulb:nth-child(7){background:#ffd166;animation-delay:1.5s}
+  @keyframes flicker{0%,100%{opacity:.35;box-shadow:0 0 4px currentColor}50%{opacity:1;box-shadow:0 0 18px 4px currentColor}}
+  /* ---------- ЗАГОЛОВКИ ---------- */
+  h1{font-size:clamp(26px,6vw,40px);line-height:1.2;margin-bottom:8px;
+     background:linear-gradient(90deg,#ffd166,#ff8c1a,#ff4d3a);
+     -webkit-background-clip:text;background-clip:text;color:transparent;}
+  .sub{color:#ffd166;letter-spacing:2px;font-size:14px;text-transform:uppercase;margin-bottom:20px}
+  /* ---------- КОЗА ---------- */
+  .goat{font-size:clamp(72px,18vw,120px);line-height:1;display:inline-block;
+        animation:bounce 2.6s ease-in-out infinite;filter:drop-shadow(0 0 24px rgba(255,138,26,.6))}
+  @keyframes bounce{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-16px) rotate(3deg)}}
+  .flame{display:inline-block;animation:flick 1.2s infinite}
+  @keyframes flick{0%,100%{transform:scale(1) rotate(-4deg)}50%{transform:scale(1.15) rotate(4deg)}}
+  /* ---------- ФОРМА ---------- */
+  .name-input{
+    width:100%;max-width:320px;margin:18px auto 14px;display:block;
+    padding:14px 18px;border-radius:14px;border:2px solid rgba(255,209,102,.5);
+    background:rgba(0,0,0,.3);color:#fff;font-size:18px;text-align:center;outline:none;
+    transition:border-color .3s, box-shadow .3s;
+  }
+  .name-input:focus{border-color:var(--gold);box-shadow:0 0 16px rgba(255,209,102,.5)}
+  .name-input.shake{animation:shake .4s}
+  @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+  .btn{
+    display:inline-block;margin-top:6px;padding:14px 34px;border:none;border-radius:30px;
+    font-size:18px;font-weight:700;color:#2b0a05;cursor:pointer;
+    background:linear-gradient(90deg,#ffd166,#ff8c1a,#ff4d3a);
+    background-size:200% auto;transition:background-position .4s, transform .2s, box-shadow .3s;
+    box-shadow:0 6px 24px rgba(255,77,58,.45);
+  }
+  .btn:hover{background-position:right center;transform:translateY(-3px) scale(1.03);box-shadow:0 10px 32px rgba(255,138,26,.6)}
+  .btn:active{transform:scale(.97)}
+  .hint{font-size:13px;color:rgba(255,255,255,.55);margin-top:14px}
+  /* ---------- ОТКРЫТКА ---------- */
+  .greeting-name{font-size:clamp(30px,7vw,46px);margin:10px 0 6px;color:#ffd166;text-shadow:0 0 24px rgba(255,209,102,.55)}
+  .year-badge{
+    display:inline-block;padding:6px 18px;border-radius:20px;margin:6px 0 16px;
+    border:1px solid rgba(255,209,102,.5);color:#ffd166;font-size:15px;letter-spacing:1px;
+    background:rgba(255,138,26,.12);animation:pulse 2.4s infinite;
+  }
+  @keyframes pulse{0%,100%{box-shadow:0 0 0 rgba(255,209,102,0)}50%{box-shadow:0 0 22px rgba(255,209,102,.5)}}
+  .wishes{font-size:16px;line-height:1.65;color:rgba(255,255,255,.9);margin-bottom:18px}
+  .countdown{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-bottom:20px}
+  .cd-box{background:rgba(0,0,0,.35);border:1px solid rgba(255,209,102,.35);border-radius:14px;padding:10px 0;width:74px}
+  .cd-num{font-size:26px;font-weight:800;color:#ffd166}
+  .cd-label{font-size:11px;color:rgba(255,255,255,.6);text-transform:uppercase;letter-spacing:1px}
+  .sign{margin-top:22px;font-size:13px;color:rgba(255,255,255,.45)}
+  /* ---------- ИСКРЫ (салют) ---------- */
+  .spark{position:fixed;width:8px;height:8px;border-radius:50%;pointer-events:none;z-index:20}
+</style>
+</head>
+<body>
+<canvas id="snow"></canvas>
+
+<!-- ЭКРАН 1: ВХОД -->
+<section class="screen" id="introScreen">
+  <div class="card">
+    <div class="garland"><span class="bulb"></span><span class="bulb"></span><span class="bulb"></span><span class="bulb"></span><span class="bulb"></span><span class="bulb"></span><span class="bulb"></span></div>
+    <div class="goat">🐐</div>
+    <h1>С наступающим 2027 годом!</h1>
+    <p class="sub">Год Огненной Козы <span class="flame">🔥</span></p>
+    <p class="wishes">Позволь козе поджечь твои мечты!<br>Но сначала — представься.</p>
+    <label for="userName" style="position:absolute;left:-9999px">Введите имя</label>
+    <input type="text" id="userName" class="name-input" maxlength="20" placeholder="Как тебя зовут?" autocomplete="off">
+    <button class="btn" id="enterBtn">Войти в праздник ✨</button>
+    <p class="hint">Открытка подстроится лично под тебя</p>
+  </div>
+</section>
+
+<!-- ЭКРАН 2: ОТКРЫТКА -->
+<section class="screen hidden" id="cardScreen">
+  <div class="card">
+    <div class="garland"><span class="bulb"></span><span class="bulb"></span><span class="bulb"></span><span class="bulb"></span><span class="bulb"></span><span class="bulb"></span><span class="bulb"></span></div>
+    <p class="sub">Персональная открытка для</p>
+    <h2 class="greeting-name" id="greetingName">Друг</h2>
+    <div class="year-badge">🐐 2027 — Год Огненной Козы 🔥</div>
+    <p class="wishes">
+      Пусть новый год горит ярким пламенем — но только в камине! 🔥<br>
+      Пусть удача прыгает выше, чем козлёнок на лугу,<br>
+      деньги текут рекой, а снежинки падают ровно в отпуск.<br>
+      Здоровья, тепла и самых дерзких целей на 2027!
+    </p>
+    <div class="countdown" id="countdown" aria-label="Обратный отсчёт до Нового года">
+      <div class="cd-box"><div class="cd-num" id="cdD">--</div><div class="cd-label">дней</div></div>
+      <div class="cd-box"><div class="cd-num" id="cdH">--</div><div class="cd-label">часов</div></div>
+      <div class="cd-box"><div class="cd-num" id="cdM">--</div><div class="cd-label">минут</div></div>
+      <div class="cd-box"><div class="cd-num" id="cdS">--</div><div class="cd-label">секунд</div></div>
+    </div>
+    <button class="btn" id="fireBtn">Запустить салют 🎆</button>
+    <p class="sign">Открытку собрала Сухова Арина · 2026</p>
+  </div>
+</section>
+
+<script>
+// ---------- ПЕРЕХОД НА ОТКРЫТКУ ----------
+const intro = document.getElementById('introScreen');
+const card  = document.getElementById('cardScreen');
+const input = document.getElementById('userName');
+
+function enter(){
+  const name = input.value.trim();
+  if(!name){
+    input.classList.remove('shake'); void input.offsetWidth; input.classList.add('shake');
+    input.placeholder = 'Ну же, имя! 🐐';
+    return;
+  }
+  document.getElementById('greetingName').textContent = name + '!';
+  intro.classList.add('hidden');
+  card.classList.remove('hidden');
+  celebrate(8);
+}
+document.getElementById('enterBtn').addEventListener('click', enter);
+input.addEventListener('keydown', e => { if(e.key === 'Enter') enter(); });
+
+// ---------- ОБРАТНЫЙ ОТСЧЁТ ----------
+const target = new Date(2027, 0, 1, 0, 0, 0); // 1 января 2027
+function tick(){
+  let diff = target - new Date();
+  if(diff <= 0){
+    document.getElementById('countdown').innerHTML =
+      '<div class="cd-box" style="width:auto;padding:10px 18px"><div class="cd-num">🐐</div><div class="cd-label">Год Огненной Козы наступил!</div></div>';
+    return;
+  }
+  const d = Math.floor(diff/864e5), h = Math.floor(diff%864e5/36e5),
+        m = Math.floor(diff%36e5/6e4), s = Math.floor(diff%6e4/1e3);
+  cdD.textContent = d; cdH.textContent = h; cdM.textContent = m; cdS.textContent = s;
+}
+setInterval(tick, 1000); tick();
+
+// ---------- СНЕГ ----------
+const canvas = document.getElementById('snow');
+const ctx = canvas.getContext('2d');
+let flakes = [];
+function resize(){ canvas.width = innerWidth; canvas.height = innerHeight; }
+addEventListener('resize', resize); resize();
+for(let i = 0; i < 120; i++){
+  flakes.push({ x: Math.random()*canvas.width, y: Math.random()*canvas.height,
+                r: Math.random()*3+1, s: Math.random()*1.2+0.4, w: Math.random()*2-1 });
+}
+(function snowLoop(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  ctx.fillStyle = 'rgba(255,255,255,.8)';
+  for(const f of flakes){
+    f.y += f.s; f.x += Math.sin(f.y/40)*f.w*0.4;
+    if(f.y > canvas.height+5){ f.y = -5; f.x = Math.random()*canvas.width; }
+    ctx.beginPath(); ctx.arc(f.x, f.y, f.r, 0, Math.PI*2); ctx.fill();
+  }
+  requestAnimationFrame(snowLoop);
+})();
+
+// ---------- ЗВЁЗДЫ ----------
+for(let i = 0; i < 40; i++){
+  const st = document.createElement('div');
+  st.className = 'star';
+  const size = Math.random()*2+1;
+  st.style.cssText = `width:${size}px;height:${size}px;left:${Math.random()*100}vw;top:${Math.random()*60}vh;animation-delay:${Math.random()*3}s`;
+  document.body.appendChild(st);
+}
+
+// ---------- САЛЮТ ----------
+const colors = ['#ffd166','#ff8c1a','#ff4d3a','#7af58c','#5ad1ff','#ff4d9d'];
+function celebrate(n){
+  const cx = innerWidth/2, cy = innerHeight/3;
+  for(let i = 0; i < n*8; i++){
+    const sp = document.createElement('div');
+    sp.className = 'spark';
+    sp.style.background = colors[Math.floor(Math.random()*colors.length)];
+    sp.style.left = cx+'px'; sp.style.top = cy+'px';
+    document.body.appendChild(sp);
+    const ang = Math.random()*Math.PI*2, v = Math.random()*9+3;
+    let vx = Math.cos(ang)*v, vy = Math.sin(ang)*v, life = 0;
+    (function fly(){
+      life++;
+      vx *= .97; vy = vy*.97 + .18;
+      sp.style.left = (cx + vx*life*3)+'px';
+      sp.style.top  = (cy + vy*life*3)+'px';
+      sp.style.opacity = Math.max(0, 1 - life/70);
+      if(life < 70) requestAnimationFrame(fly); else sp.remove();
+    })();
+  }
+}
+document.getElementById('fireBtn').addEventListener('click', () => celebrate(8));
+</script>
+</body>
+</html>
